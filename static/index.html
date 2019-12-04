@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-39544844-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "UA-39544844-2");
+    </script>
+
+    <meta charset="utf-8" />
+    <meta name="author" content="Jeremy Moreau" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Meningioma.app" />
+    <meta name="description" content="Individual-patient prediction of meningioma malignancy and survival" />
+    <title>Meningioma.app</title>
+
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.2/css/onsenui.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/onsenui@2.10.2/css/onsen-css-components.min.css" />
+    <script src="https://unpkg.com/onsenui@2.10.2/js/onsenui.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+    <!-- Fallback JS/CSS -->
+    <script>
+        if (typeof ons == "undefined") {
+            document.write(
+                unescape('%3Clink rel="stylesheet" href="onsenui.min.css" /%3E')
+            );
+            document.write(
+                unescape(
+                    '%3Clink rel="stylesheet" href="onsen-css-components.min.css" /%3E'
+                )
+            );
+            document.write(
+                unescape('%3Cscript src="onsenui.min.js" %3E%3C/script%3E')
+            );
+        }
+        if (typeof jQuery == "undefined") {
+            document.write(
+                unescape('%3Cscript src="jquery.min.js" %3E%3C/script%3E')
+            );
+        }
+    </script>
+    <link rel="stylesheet" href="style.css" />
+    <script src="scripts.js"></script>
+
+    <!-- Register PWA -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/sw.js")
+                .then(registration => {
+                    // Don't check for updates on first load
+                    if (registration.active) {
+                        // Check if an updated sw.js was found
+                        registration.addEventListener("updatefound", () => {
+                            console.log("Update found. Waiting for install to complete.");
+                            const installingWorker = registration.installing;
+                            // Install updates
+                            installingWorker.addEventListener("statechange", () => {
+                                if (installingWorker.state === "installed") {
+                                    console.log("Install complete.");
+                                    location.reload();
+                                }
+                            });
+                        });
+                    }
+                })
+                .catch(e => console.log(e));
+        }
+    </script>
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=0.3.2" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=0.3.2" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=0.3.2" />
+    <link rel="manifest" href="/site.webmanifest?v=0.3.2" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg?v=0.3.2" color="#026d92" />
+    <link rel="shortcut icon" href="/favicon.ico?v=0.3.2" />
+    <meta name="msapplication-TileColor" content="#026d92" />
+</head>
+
+<body>
+    <noscript>
+        <div class="noscript-box">
+            <h3 class="noscript-title">JavaScript Required</h3>
+            <div class="noscript-message">
+                This app will not work without JavaScript, please enable it.
+            </div>
+        </div>
+    </noscript>
+    <ons-navigator swipeable id="myNavigator" page="home.html"></ons-navigator>
+    <template id="home.html">
+        <ons-page id="home">
+            <ons-toolbar class="toolbar-home">
+                <div class="center">
+                    <img src="meningioma-icon.svg" alt="Meningioma.app icon" id="meningioma-icon-home" />
+                    Meningioma.app
+                </div>
+                <div class="left">
+                    <ons-toolbar-button>
+                        <img src="icons/help.svg" alt="Help button" id="help-button-home" />
+                    </ons-toolbar-button>
+                </div>
+                <div class="right">
+                    <ons-toolbar-button>
+                        <img src="icons/menu.svg" alt="Menu button" id="menu-button-home" />
+                    </ons-toolbar-button>
+                </div>
+            </ons-toolbar>
+
+            <ons-card>
+                <ons-col>
+                    <span id="age-label"> Age at diagnosis (66):</span>
+                    <ons-range id="age-range" min="0" max="110" value="66" class="range-home">
+                    </ons-range>
+                </ons-col>
+                <br />
+                <ons-col>
+                    <span id="tumour-size-label">Tumour size (22 mm):</span>
+                    <ons-range id="tumour-size-range" min="1" max="100" value="22" class="range-home">
+                    </ons-range>
+                </ons-col>
+                <br />
+                <ons-segment id="sex-segment" class="segment-home">
+                    <button>Male</button>
+                    <button>Female</button>
+                </ons-segment>
+                <br />
+                <br />
+                <ons-segment id="race-segment" class="segment-home">
+                    <button>White</button>
+                    <button>Black</button>
+                    <button>Other</button>
+                </ons-segment>
+                <br />
+                <br />
+                <ons-segment id="insurance-segment" class="segment-home">
+                    <button>Insured</button>
+                    <button>Uninsured</button>
+                    <button>Unknown status</button>
+                </ons-segment>
+
+                <br />
+                <br />
+                <ons-segment id="laterality-segment" class="segment-home">
+                    <button>Not bilateral</button>
+                    <button>Midline</button>
+                    <button>Bilateral</button>
+                </ons-segment>
+
+                <br />
+                <br />
+                <ons-select id="site-select" class="select-home">
+                    <option>Cerebral meninges</option>
+                    <option>Spinal meninges</option>
+                    <option>Other ("intraparenchymal")</option>
+                    <option>Meninges NOS</option>
+                </ons-select>
+
+                <br />
+                <br />
+
+                <ons-list>
+                    <ons-list-header class="list-header-home">
+                        Surgery (select all options to display)
+                    </ons-list-header>
+                    <ons-list-item>
+                        <div class="center">
+                            No surgery
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch0" checked></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Gross total resection
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch1"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Subtotal resection (brain)
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch2"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Resection (spinal cord or nerve)
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch3"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Partial resection of lobe
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch4"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Local excision
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch5"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Radical
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch6"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            Other surgery
+                        </div>
+                        <div class="right">
+                            <ons-switch id="sx-switch7"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                </ons-list>
+
+                <br />
+                <br />
+
+                <ons-list>
+                    <ons-list-header class="list-header-home">
+                        Tumour behaviour (Optional)
+                    </ons-list-header>
+                    <ons-list-item>
+                        <div class="center">
+                            Enter tumour behaviour if known (e.g. following
+                            histopathological confirmation after biopsy / surgery).The
+                            information will be used to improve survival predictions if
+                            provided.
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item>
+                        <div class="center">
+                            <ons-select id="tumour-select" class="select-home">
+                                <option>Tumour behaviour not known</option>
+                                <option>Benign</option>
+                                <option>Borderline malignancy</option>
+                                <option>Malignant</option>
+                            </ons-select>
+                        </div>
+                    </ons-list-item>
+                </ons-list>
+
+                <ons-row>
+                    <ons-list-item modifier="nodivider" tappable>
+                        <label class="left">
+                            <ons-checkbox id="agree-check"></ons-checkbox>
+                        </label>
+                        <label for="agree-check" class="center">
+                            I understand that meningioma.app is solely intended for research
+                            and educational purposes and is not certified for medical use.
+                        </label>
+                    </ons-list-item>
+                </ons-row>
+
+                <p style="text-align: center">
+                    <ons-button id="compute-button" disabled>
+                        <span class="compute-label">Compute</span>
+                        <span class="spinner"></span>
+                    </ons-button>
+                </p>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="results.html">
+        <ons-page id="results">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Back</ons-back-button>
+                </div>
+                <div class="center">Results</div>
+            </ons-toolbar>
+
+            <ons-card>
+                <h3 class="card__title">Malignancy</h3>
+                <div id="malignancy-card" class="card__content card-results"></div>
+            </ons-card>
+
+            <ons-card>
+                <h3 class="card__title">Survival</h3>
+                <div id="survival-card" class="card__content"></div>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="menu.html">
+        <ons-page id="menu">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Back</ons-back-button>
+                </div>
+                <div class="center">Meningioma.app</div>
+            </ons-toolbar>
+
+            <ons-list>
+                <ons-list-item id="paper-menuitem" tappable>
+                    <ons-col width="3rem" class="menu-icons">
+                        <img src="icons/book.svg" alt="Book icon" />
+                    </ons-col>
+                    <ons-col>Read the paper</ons-col>
+                </ons-list-item>
+
+                <ons-list-item id="contact-menuitem" tappable>
+                    <ons-col width="3rem" class="menu-icons">
+                        <img src="icons/mail.svg" alt="Mail icon" />
+                    </ons-col>
+                    <ons-col>Contact</ons-col>
+                </ons-list-item>
+
+                <ons-list-item id="website-menuitem" tappable>
+                    <ons-col width="3rem" class="menu-icons">
+                        <img src="icons/person.svg" alt="Person icon" />
+                    </ons-col>
+                    <ons-col>App by Jeremy Moreau</ons-col>
+                </ons-list-item>
+
+                <ons-list-item id="licence-menuitem" tappable>
+                    <ons-col width="3rem" class="menu-icons">
+                        <img src="icons/licence.svg" alt="smartphone icon" />
+                    </ons-col>
+                    <ons-col>Licence information</ons-col>
+                </ons-list-item>
+
+                <ons-list-item id="version-menuitem" tappable>
+                    <ons-col width="3rem" class="menu-icons">
+                        <img src="icons/smartphone.svg" alt="smartphone icon" />
+                    </ons-col>
+                    <ons-col>Version 0.5.3</ons-col>
+                </ons-list-item>
+            </ons-list>
+        </ons-page>
+    </template>
+
+    <template id="licence.html">
+        <ons-page id="licence">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Back</ons-back-button>
+                </div>
+                <div class="center">Meningioma.app</div>
+            </ons-toolbar>
+
+            <ons-card>
+                <p>Author: Jeremy Moreau</p>
+                <p>Copyright © 2018, McGill University</p>
+                <h3>License Information</h3>
+                <p>
+                    meningioma.app is distributed under the terms of the Mozilla Public
+                    License, v. 2.0. If a copy of the MPL was not distributed with your
+                    software, You can obtain one at
+                    <a href="https://mozilla.org/MPL/2.0/" target="_blank">https://mozilla.org/MPL/2.0/</a>.
+                </p>
+                <p>
+                    meningioma.app is also distributed under the terms of the following
+                    Healthcare Disclaimer.
+                </p>
+                <h4>Healthcare Disclaimer</h4>
+                <p>
+                    In Canada, the United States, or any other jurisdictions where they
+                    may apply, the following additional disclaimer of warranty and
+                    limitation of liability are hereby incorporated into the terms and
+                    conditions of MPL 2.0:
+                </p>
+                <p>
+                    No warranties of any kind whatsoever are made as to the results that
+                    You will obtain from relying upon the covered code (or any
+                    information or content obtained by way of the covered code),
+                    including but not limited to compliance with privacy laws or
+                    regulations or clinical care industry standards and protocols. Use
+                    of the covered code is not a substitute for a health care provider’s
+                    standard practice or professional judgment. Any decision with regard
+                    to the appropriateness of treatment, or the validity or reliability
+                    of information or content made available by the covered code, is the
+                    sole responsibility of the health care provider. Consequently, it is
+                    incumbent upon each health care provider to verify all medical
+                    history and treatment plans with each patient.
+                </p>
+                <p>
+                    Under no circumstances and under no legal theory, whether tort
+                    (including negligence), contract, or otherwise, shall any
+                    Contributor, or anyone who distributes Covered Software as permitted
+                    by the license, be liable to You for any indirect, special,
+                    incidental, consequential damages of any character including,
+                    without limitation, damages for loss of goodwill, work stoppage,
+                    computer failure or malfunction, or any and all other damages or
+                    losses, of any nature whatsoever (direct or otherwise) on account of
+                    or associated with the use or inability to use the covered content
+                    (including, without limitation, the use of information or content
+                    made available by the covered code, all documentation associated
+                    therewith, and the failure of the covered code to comply with
+                    privacy laws and regulations or clinical care industry standards and
+                    protocols), even if such party shall have been informed of the
+                    possibility of such damages.
+                </p>
+                <p>
+                    License Information by
+                    <a href="https://openmrs.org/license" target="_blank">OpenMRS</a> /
+                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>
+                </p>
+                <h4>Icons</h4>
+                <p>
+                    The meningioma.app icon was designed by Jeremy Moreau and is made
+                    available under
+                    <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY SA 4.0</a>
+                </p>
+                <p>
+                    All other icons were designed by Google, and are licensed under the
+                    Apache License Version 2.0 (<a href="https://google.github.io/material-design-icons/"
+                        target="_blank">https://google.github.io/material-design-icons/</a>)
+                </p>
+
+                <h4>Other Licenses</h4>
+                <p>
+                    <a href="https://github.com/pallets/flask" target="_blank">flask</a> -
+                    <a href="https://github.com/pallets/flask/blob/master/LICENSE.rst" target="_blank">BSD 3-Clause</a>
+                </p>
+                <p>
+                    <a href="https://github.com/joblib/joblib" target="_blank">joblib</a> -
+                    <a href="https://github.com/joblib/joblib/blob/master/LICENSE.txt" target="_blank">BSD 3-Clause</a>
+                </p>
+                <p>
+                    <a href="https://github.com/matplotlib/matplotlib" target="_blank">matplotlib</a> -
+                    <a href="https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE" target="_blank">Matplotlib
+                        license</a>
+                </p>
+                <p>
+                    <a href="https://github.com/numpy/numpy" target="_blank">numpy</a> -
+                    <a href="https://github.com/numpy/numpy/blob/master/LICENSE.txt" target="_blank">BSD 3-Clause</a>
+                </p>
+                <p>
+                    <a href="https://github.com/pandas-dev/pandas" target="_blank">pandas</a> -
+                    <a href="https://github.com/pandas-dev/pandas/blob/master/LICENSE" target="_blank">BSD 3-Clause</a>
+                </p>
+                <p>
+                    <a href="https://github.com/scikit-learn/scikit-learn" target="_blank">scikit-learn</a>
+                    -
+                    <a href="https://github.com/scikit-learn/scikit-learn/blob/master/COPYING" target="_blank">New BSD License</a>
+                </p>
+                <p>
+                    <a href="https://github.com/mwaskom/seaborn" target="_blank">seaborn</a> -
+                    <a href="https://github.com/mwaskom/seaborn/blob/master/LICENSE" target="_blank">BSD 3-Clause</a>
+                </p>
+                <p>
+                    <a href="https://github.com/jquery/jquery" target="_blank">jQuery</a> -
+                    <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT License</a>
+                </p>
+                <p>
+                    <a href="https://github.com/OnsenUI/OnsenUI" target="_blank">OnsenUI</a> -
+                    <a href="https://github.com/OnsenUI/OnsenUI/blob/master/LICENSE" target="_blank">Apache License 2.0</a>
+                </p>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="help.html">
+        <ons-page id="help">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button>Back</ons-back-button>
+                </div>
+                <div class="center">Meningioma.app</div>
+            </ons-toolbar>
+
+            <ons-card>
+                <h1 class="card__title">Help</h1>
+                <div id="help-card" class="card__content card-results">
+                    <h3>Installation</h3>
+                    <p>
+                        Meningioma.app runs in the browser, but it can also be installed
+                        on IOS (iPhone/iPad) or Android devices. Note: an internet
+                        connection is always required.
+                    </p>
+                    <ons-list id="installation_instructions">
+                        <ons-list-item expandable>
+                            IOS
+                            <div class="expandable-content">
+                                Using the Safari browser, tap the share button (rectangle with
+                                upward pointing arrow) at the bottom of the screen and select
+                                "Add to Home Screen".
+                            </div>
+                        </ons-list-item>
+                        <ons-list-item expandable>
+                            Android
+                            <div class="expandable-content">
+                                Using the Chrome browser, tap the &vellip; icon at the top
+                                right of the screen and then select "Add to Home screen".
+                            </div>
+                        </ons-list-item>
+                    </ons-list>
+                    <h3>Background</h3>
+                    <p>
+                        Meningioma.app is the companion app to our paper,
+                        "Individual-patient prediction of meningioma malignancy and
+                        survival using the Surveillance, Epidemiology, and End Results
+                        database". We strongly recommend users read the (open access)
+                        paper to get a better understanding of the interpretation and
+                        limitations of the models included in this app: [Link to paper].
+                        The app provides predictions of tumour behaviour and
+                        patient-specific survival estimates on the basis of a set of basic
+                        clinical variables. The models presented here fall under the
+                        "Development Stage" of
+                        <a href="https://www.ncbi.nlm.nih.gov/pubmed/28230847">Woo et al.'s framework of levels of
+                            evidence for predictive
+                            biomarkers</a>
+                        and therefore will require further prospective validation to
+                        demonstrate true clinical utility. Our intention with the current
+                        app release is to give readers the ability to evaluate and probe
+                        these models for insights, whether with past historical cases,
+                        current, or hypothetical patients. We do however emphasise that at
+                        the current time the models should not be used to guide treatment
+                        decisions. If you are interested in undertaking prospective
+                        validation studies or have access to large datasets of imaging or
+                        molecular markers on which you would like to apply similar
+                        methods, please do not hesitate to contact us for potential
+                        collaborations.
+                    </p>
+
+                    <h3>Input variables</h3>
+                    <p>
+                        The clinical variables used as input are based on the data
+                        collected by the Surveillance, Epidemiology, and End Results
+                        Program (<a href="https://seer.cancer.gov/">SEER</a>). The letters
+                        in brackets indicate whether the variable is used for predicting
+                        Malignancy (M), survival (S) or both (M, S).
+                    </p>
+
+                    <p></p>
+                    <dl>
+                        <dt>Age at diagnosis [M, S]:</dt>
+                        <dd>The patient's age in years.</dd>
+                        <dt>Tumor size [M, S]:</dt>
+                        <dd>
+                            The largest dimension or the diameter of the meningioma in mm.
+                        </dd>
+                        <dt>Race [S]:</dt>
+                        <dd>
+                            Race/ethnicity recoded into three categories as
+                            <a href="https://seer.cancer.gov/seerstat/variables/seer/race_ethnicity/">explained
+                                here.</a>
+                        </dd>
+                        <dt>Insurance status [S]:</dt>
+                        <dd>Whether the patient had insurance or not.</dd>
+                        <dd></dd>
+                        <dt>Laterality [S]:</dt>
+                        <dd>
+                            Whether the meningioma was lateralised to one side of the brain,
+                            localised to the midline, or extended bilaterally over both
+                            hemispheres.
+                        </dd>
+                        <dt>Primary site [S]:</dt>
+                        <dd>The site in which the tumour originated.</dd>
+                        <dt>Surgery [S]:</dt>
+                        <dd>
+                            Surgical procedure performed, as
+                            <a href="https://seer.cancer.gov/manuals/2018/AppendixC/Surgery_Codes_Brain_2018.pdf">described
+                                here.</a>
+                            If "No surgery" is selected, meningioma.app will plot predicted
+                            survival curves for different reason why no surgery was
+                            performed, including "Not recommended" (i.e. the treating
+                            physicians did not recommend surgery for the meningioma),
+                            "Contraindicated due to other condition", and "Patient refused
+                            surgery".
+                        </dd>
+                        <dt>Tumour Behaviour (optional) [S]:</dt>
+                        <dd>
+                            If true tumour behaviour is known (e.g. following
+                            histopathological confirmation after biopsy / surgery) it can be
+                            entered here. If provided, the information will be used to
+                            improve survival predictions as discussed in the paper.
+                        </dd>
+                    </dl>
+
+                    <h3>Output</h3>
+                    <h4>Malignancy</h4>
+                    <p>
+                        Two graphs are produced as output. The first shows the predicted
+                        tumour behaviour class (benign or borderline malignancy/malignant)
+                        as well as the predicted probabilities of the model. At the
+                        selected thresholds (>5% chance of a non-benign meningioma), we
+                        obtained a sensitivity of 0.79 with specificity of 0.75 and a PPV
+                        of 0.14 with a negative predictive value (NPV) of 0.99 for
+                        distinguishing between benign and borderline malignant / malignant
+                        meningiomas. Refer to Fig. 3 of the paper for more details.
+                    </p>
+                    <h4>Survival</h4>
+                    <p>
+                        This graph shows individualised predicted survival curves for the
+                        inputted patient characteristics. The survival curves show the
+                        predicted probability of survival from time of diagnosis (e.g. 70%
+                        probability of survival at 60 months months / 5 years
+                        post-diagnosis). Refer to figures 4-5 of the paper for model
+                        scoring and additional details.
+                    </p>
+                </div>
+            </ons-card>
+        </ons-page>
+    </template>
+</body>
+
+</html>

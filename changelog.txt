@@ -1,0 +1,72 @@
+Version 0.1.0 (2018-07-06)
+- Initial release
+
+Version 0.2.0 (2018-07-08)
+- Removed redundant sx status dropdown (set automatically in backend based on switches)
+- Added Compute button animation and spinner to display while getting results
+- index.html and style.css are now W3C valid
+- Added local fallback js/css for onsenui and jQuery
+- Improved Ajax request handling
+- Added notification about preview status of app
+- Refactored and added more comments
+- Added contact and other info to menu
+- Added Google Analytics
+
+Version 0.2.1 (2018-07-08)
+- Fixed Google Analytics event tracking
+- Fixed centering of Compute button text
+
+Version 0.3.0 (2018-07-10)
+- Progressive Web App support
+- Added app icon
+
+Version 0.3.1 (2018-07-10)
+- Changed IOS icon to correct version with gradient
+
+Version 0.3.2 (2018-07-11)
+- New IOS/Android icons
+- Fixed device menubar colour so that it would match
+- Replaced all font icons with SVG versions (and added them to cache)
+- Added icon to toolbar
+
+Version 0.3.3 (2018-08-13)
+- Updated classifiers to new versions
+- Changed feature ordering respectively
+
+Version 0.3.4 (2018-10-05)
+- Updated alert notification text
+
+Version 0.3.5 (2018-11-11)
+- Updated alert notification text
+
+Version 0.4.0 (2019-04-08)
+- First public release
+- Added license.txt
+- Updated malignancy and survival models
+- Added insurance status, and tumour behaviour options
+- Added help menu
+- Changed range of age at diagnosis and tumour size sliders
+- Uploaded source code
+- Updated packages in conda env
+- Minor cosmetic enhancements
+
+Version 0.4.1 (2019-04-12)
+- Added installation instructions
+- Minor cosmetic enhancements
+
+Version 0.5.0 (2019-10-31)
+- Updated malignancy and survival models
+- Changed malignancy plot to display population sample probability distribution
+- Updated conda env (meningioma_app_0.5.0)
+
+Version 0.5.1 (2019-11-01)
+- Update help
+
+Version 0.5.2 (2019-11-01)
+- Minor Cosmetic changes to survival figure
+
+Version 0.5.3 (2019-12-03)
+- First github release
+- Update licence information
+- Add licence information menu to app GUI
+- Refactoring

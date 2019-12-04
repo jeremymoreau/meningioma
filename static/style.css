@@ -1,0 +1,175 @@
+.toolbar-icons {
+  background-color: inherit;
+  color: #343838;
+}
+
+.range-home {
+  width: 100%;
+}
+
+.segment-home {
+  width: 100%;
+}
+
+.select-home {
+  width: 100%;
+}
+
+.list-header-home {
+  width: 100%;
+  text-align: center;
+  padding: 0;
+}
+
+dt {
+  font-weight: bold;
+  padding-top: 1rem;
+}
+
+dd {
+  text-align: justify;
+}
+
+p {
+  text-align: justify;
+}
+
+a {
+  outline: none;
+  text-decoration: none;
+  padding: 2px 1px 0;
+}
+
+a:link {
+  color: #2d6f8e;
+}
+
+a:visited {
+  color: #2a4c61;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  background: #cde2df;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  background: #cde2df;
+}
+
+a:active {
+  background: #cde2df;
+  color: #46354b;
+}
+
+#meningioma-icon-home {
+  position: relative;
+  top: 0.5rem;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+#help-button-home {
+  position: relative;
+  top: 0.4rem;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+#menu-button-home {
+  position: relative;
+  top: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.menu-icons {
+  text-align: center;
+}
+
+#compute-button {
+  width: 7rem;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+#compute-button.compute-button-trans {
+  width: 9rem;
+}
+
+.compute-label {
+  margin-right: 0px;
+}
+
+.compute-label.compute-label-trans {
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  -o-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  margin-right: 30px;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  float: right;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: 30px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-top-color: #ccc;
+  animation: spinner 0.8s linear infinite;
+}
+
+.spinner {
+  opacity: 0;
+  display: block;
+}
+
+.spinner.spinner-trans {
+  -webkit-transition: all 0.5s ease-in;
+  -moz-transition: all 0.5s ease-in;
+  -o-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  opacity: 1;
+}
+
+.noscript-box {
+  font-size: 2rem;
+  font-family: -apple-system, "Helvetica Neue", Helvetica, Arial,
+    "Lucida Grande", sans-serif;
+  background-color: #e7e7e7;
+  width: 600px;
+  height: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -300px;
+  margin-top: -150px;
+  border-radius: 25px;
+}
+
+.noscript-title {
+  font-size: 2.5rem;
+  padding: 2rem 2rem 0rem 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.noscript-message {
+  padding: 0rem 2rem 2rem 2rem;
+  text-align: center;
+}
