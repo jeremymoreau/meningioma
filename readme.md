@@ -5,9 +5,9 @@
 [Meningioma.app](https://meningioma.app/) is the companion app to our paper,
 "Individual-patient prediction of meningioma malignancy and
 survival using the Surveillance, Epidemiology, and End Results
-database". We strongly recommend users read the (open access)
+database". We strongly encourage users to read the (open access)
 paper to get a better understanding of the interpretation and
-limitations of the models included in this app: [Link to paper].
+limitations of the models included in this app: https://www.nature.com/articles/s41746-020-0219-5.
 The app provides predictions of tumour behaviour and
 patient-specific survival estimates on the basis of a set of basic
 clinical variables. The models presented here fall under the
